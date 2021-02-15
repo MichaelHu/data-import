@@ -1,0 +1,23 @@
+hello	hello world	基本输入、输出
+		格式化输出
+	行结构	"反斜线：显式换行
+括号结构：隐式换行"
+	关键词	"False      await      else       import     pass
+None       break      except     in         raise
+True       class      finally    is         return
+and        continue   for        lambda     try
+as         def        from       nonlocal   while
+assert     del        global     not        with
+async      elif       if         or         yield"
+	操作符	" +       -       *       **      /       //      %      @
+<<      >>      &       |       ^       ~       :=
+<       >       <=      >=      ==      !="
+	分隔符	"(       )       [       ]       {       }
+,       :       .       ;       @       =       ->
++=      -=      *=      /=      //=     %=      @=
+&=      |=      ^=      >>=     <<=     **=
+
+'       ""       #       \"
+	不用的分隔符	$       ?       `
+io	标准io	"sys.stdin
+sys.stdout"
