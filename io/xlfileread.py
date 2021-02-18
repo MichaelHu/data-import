@@ -2,20 +2,50 @@ import sys
 import xlrd
 import openpyxl
 
-def fileread(file_name, sheet_name):
+def fileread(file_name, sheet_name, callbacks={}):
     if file_name.lower().endswith('.xls'):
-        xlsfileread(file_name, sheet_name)
+        xlsfileread(file_name, sheet_name, callbacks)
     elif file_name.lower().endswith('.xlsx'):
-        xlsxfileread(file_name, sheet_name)
+        xlsxfileread(file_name, sheet_name, callbacks)
     else:
         print('not support file format!')
 
-def xlsfileread(file_name, sheet_name):
+def call_if_defined(obj, func_name, params):
+    if obj and func_name in obj and obj[func_name] and callable(obj[func_name]):
+        return obj[func_name](params)
+    return False
+
+
+def xlsfileread(file_name, sheet_name, callbacks = {}):
     # 打开excel
     wb = xlrd.open_workbook(file_name)
 
+    if not call_if_defined(callbacks, 'after_book_open', {'workbook': wb}):
+        return
+
     # 设置读取编码
     # wb = xlrd.open_workbook(..., encoding_override="cp1252")
+
+    sheets = wb.sheets()
+    sheet_names = wb.sheet_names()
+
+    for i in range(len(sheets)):
+        sheet = sheets[i]
+        if not call_if_defined(callbacks, 'before_sheet_open', {'sheet': sheet, 'name': sheet_names[i]}):
+            continue
+
+        for row in sheet.get_rows():
+            if not call_if_defined(callbacks, 'before_row_open'
+                , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
+                continue
+            for cell in row:
+                if not call_if_defined(callbacks, 'cell_open'
+                    , {'sheet': sheet, 'name': sheet_names[i], 'row': row, 'cell': cell}):
+                    continue
+            if not call_if_defined(callbacks, 'after_row_open'
+                , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
+                continue
+    return
 
     sh = wb.sheet_by_name(sheet_name)
 
@@ -38,7 +68,7 @@ def xlsfileread(file_name, sheet_name):
         print(sh.row_values(i))
 
 
-def xlsxfileread(file_name, sheet_name):
+def xlsxfileread(file_name, sheet_name, callbacks = {}):
 
     # 打印当前范围下的变量、方法和定义的类型列表
     # print(dir())
@@ -51,6 +81,29 @@ def xlsxfileread(file_name, sheet_name):
 
     # 打开excel
     wb = openpyxl.load_workbook(file_name)
+
+    if not call_if_defined(callbacks, 'after_book_open', {'workbook': wb}):
+        return
+
+    sheets = wb.worksheets
+    sheet_names = wb.sheetnames
+    for i in range(len(sheets)):
+        sheet = sheets[i]
+        if not call_if_defined(callbacks, 'before_sheet_open', {'sheet': sheet, 'name': sheet_names[i]}):
+            continue
+
+        for row in sheet.rows:
+            if not call_if_defined(callbacks, 'before_row_open'
+                , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
+                continue
+            for cell in row:
+                if not call_if_defined(callbacks, 'cell_open'
+                    , {'sheet': sheet, 'name': sheet_names[i], 'row': row, 'cell': cell}):
+                    continue
+            if not call_if_defined(callbacks, 'after_row_open'
+                , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
+                continue
+    return
 
     # print(dir(wb))
     # print(wb.defined_names)
