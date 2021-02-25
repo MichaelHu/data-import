@@ -79,8 +79,7 @@ def after_row_open(sheet):
 xlfileread.fileread(
     # './tmp-file/210111-210117.xls'
     # './tmp-file/210118-210124.xls'
-    # './tmp-file/__projects.xls'
-    './tmp-file/__210104-210110.xls'
+    './tmp-file/__projects.xls'
     , 'Sheet1'
     , {
         'after_book_open': after_book_open

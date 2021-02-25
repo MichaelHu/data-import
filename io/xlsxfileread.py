@@ -45,8 +45,9 @@ def after_row_open(sheet):
     return True
 
 xlfileread.fileread(
-    './tmp-file/cmmi.xlsx'
+    # './tmp-file/cmmi.xlsx'
     # './tmp-file/all-weeks-2019.xlsx'
+    './tmp-file/__jszk-210220.xlsx'
     , 'CMMI功能点估算'
     , {
         'after_book_open': after_book_open
