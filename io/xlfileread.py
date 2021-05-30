@@ -94,18 +94,26 @@ def xlsxfileread(file_name, sheet_name, callbacks = {}):
 
     sheets = wb.worksheets
     sheet_names = wb.sheetnames
+
     for i in range(len(sheets)):
         sheet = sheets[i]
         if not call_if_defined(callbacks, 'before_sheet_open', {'sheet': sheet, 'name': sheet_names[i]}):
             continue
 
+        row_index = 0
         for row in sheet.rows:
+            row_index += 1
             if not call_if_defined(callbacks, 'before_row_open'
-                , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
+                    , {'sheet': sheet, 'name': sheet_names[i]
+                        , 'row': row, 'row_index': row_index}):
                 continue
+            cell_index = 0
             for cell in row:
+                cell_index += 1
                 if not call_if_defined(callbacks, 'cell_open'
-                    , {'sheet': sheet, 'name': sheet_names[i], 'row': row, 'cell': cell}):
+                        , {'sheet': sheet, 'name': sheet_names[i]
+                            , 'row': row, 'row_index': row_index
+                            , 'cell': cell, 'cell_index': cell_index}):
                     continue
             if not call_if_defined(callbacks, 'after_row_open'
                 , {'sheet': sheet, 'name': sheet_names[i], 'row': row}):
